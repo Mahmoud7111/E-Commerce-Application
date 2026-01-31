@@ -12,6 +12,7 @@ A comprehensive desktop e-commerce application built with **Java** and **JavaFX*
 - [Overview](#-overview)
 - [Features](#-features)
 - [Architecture](#️-architecture)
+- [Class Diagram](#-class-diagram)
 - [User Roles](#-user-roles)
 - [Screenshots](#-screenshots)
 - [Demo Video](#-demo-video)
@@ -26,7 +27,7 @@ A comprehensive desktop e-commerce application built with **Java** and **JavaFX*
 
 ## 🌟 Overview
 
-This E-Commerce Application is a full-featured desktop shopping platform that supports three distinct user roles: **Admin**, **Seller**, and **Customer**. The application provides a complete e-commerce experience with product management, shopping cart functionality, order processing, and comprehensive reporting tools.
+This E-Commerce Application is a full-featured desktop shopping platform that supports three distinct user roles: **Admin**, **Seller**, and **Customer**. The application provides a complete e-commerce experience including product browsing, shopping cart management, order processing, and comprehensive reporting features.
 
 The application uses **file-based persistence** to store data locally, making it easy to deploy and run without requiring a database server.
 
@@ -112,6 +113,42 @@ The application follows a **layered architecture** pattern:
 - **Singleton Pattern**: DataStore ensures single instance for data management
 - **Factory Pattern**: ID generation for users, products, and orders
 - **Strategy Pattern**: Different dashboards for different user roles
+
+---
+
+## 📐 Class Diagram
+
+The following UML class diagram illustrates the structure and relationships between all classes in the application:
+
+![Class Diagram](<img width="3961" height="3495" alt="E-Com (FINAL) drawio" src="https://github.com/user-attachments/assets/44092f91-5f46-4565-b62b-92b98747a128" />
+)
+
+📄 **[View Full Class Diagram (PDF)]([E-Com (FINAL).drawio.pdf](https://github.com/user-attachments/files/24976672/E-Com.FINAL.drawio.pdf)
+)**
+
+### Key Components:
+
+#### **Domain Layer**
+- **User Hierarchy**: Abstract `User` class with `Admin`, `Seller`, and `Customer` subclasses
+- **Shopping System**: `Product`, `Cart`, `Order`, `Item`, and `Supplier` classes
+- **Relationships**: 
+  - Customer has-a Cart
+  - Cart contains multiple Items
+  - Order contains multiple Products
+  - Seller manages multiple Products
+
+#### **Data Layer**
+- **DataStore**: Singleton pattern for centralized data management
+- **FileManager**: Handles serialization and file I/O operations
+
+#### **UI Layer**
+- **MainApp**: Application entry point
+- **Role-specific Dashboards**: AdminDashboard, SellerDashboard, CustomerDashboard
+- **Management Views**: Product management, order management, reports
+
+#### **Utilities**
+- **IDGenerator**: Atomic ID generation for entities
+- **UIStyles**: Centralized styling constants
 
 ---
 
@@ -448,6 +485,3 @@ If you found this project helpful, please give it a ⭐️!
 - Shopping cart system
 - Revenue reporting
 - File-based persistence
-
-
-

@@ -29,6 +29,9 @@ public class MainApp extends Application {
         Cart.setDataStore(ds);
         Order.setDataStore(ds);
         
+        // CRITICAL: Initialize ID Generator BEFORE creating any entities
+        IDGenerator.initialize(ds);
+        
         System.out.println("DataStore initialized.");
         System.out.println("Current users in system: " + ds.getUsers().size());
         
@@ -44,6 +47,10 @@ public class MainApp extends Application {
         createDefaultAdminIfNeeded();
         
         System.out.println("\nTotal users after initialization: " + ds.getUsers().size());
+        
+        // Print ID Generator status
+        IDGenerator.printStatus();
+        
         System.out.println("========================================\n");
         
         LoginMenu.show(stage);
@@ -64,9 +71,10 @@ public class MainApp extends Application {
             System.out.println("⚠️  NO ADMIN FOUND - Creating default admin");
             System.out.println("===========================================");
             
-            String adminId = "U1000"; // Fixed ID for admin
-            
             try {
+                // Use ID generator for consistent ID
+                String adminId = IDGenerator.generateUserId();
+                
                 Admin defaultAdmin = new Admin(
                     adminId,
                     "admin",
@@ -77,9 +85,6 @@ public class MainApp extends Application {
                 
                 // Add and save
                 defaultAdmin.addUser();
-                
-                // Force save to ensure it persists
-                ds.saveUsers();
                 
                 // Verify it was added
                 User savedAdmin = ds.getUsers().get(adminId);

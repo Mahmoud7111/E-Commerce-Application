@@ -5,18 +5,6 @@ import ecommerce.data.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author asus
- */
-
-
 public abstract class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -37,25 +25,23 @@ public abstract class User implements Serializable {
     
     // constructor 
     public User(String id, String username, String password, String email, String role, LocalDateTime registeredDate) {
-    this.id = id;
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.role = role;
+        if (id == null || id.isBlank()) throw new IllegalArgumentException("ID cannot be empty");
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be empty");
+        if (password == null || password.length() < 4) throw new IllegalArgumentException("Password too short");
+        if (email == null || !email.contains("@")) throw new IllegalArgumentException("Invalid email");
+        
+        this.id = id;
+        this.username = username.trim();
+        this.password = password; // Store password as-is
+        this.email = email.trim();
+        this.role = role;
 
-    // If loaded from DB/file → use existing date
-    // If newly created → use now()
-    this.registeredDate = (registeredDate != null) 
-            ? registeredDate 
-            : LocalDateTime.now();
-    setUsername(username);   //This ensures that every Customer object is always created with valid data.
-                              //ERROR: setAddress() is a non-final, public method, so it can be overridden in a subclass.
-                              //Java warns you: if a subclass overrides setAddress(),
-                               //that overridden version could be called before the subclass constructor runs, which is unsafe.
-                               // solution: make the setter final so it cannot be overridden.
-    setPassword(password); 
-    setEmail(email);       
-}
+        // If loaded from DB/file → use existing date
+        // If newly created → use now()
+        this.registeredDate = (registeredDate != null) 
+                ? registeredDate 
+                : LocalDateTime.now();
+    }
 
 
     //Getters
@@ -74,12 +60,12 @@ public abstract class User implements Serializable {
     public String getRole() {
         return role;
     }
-    public boolean checkPassword(String input) {   //class Authration هنستخدمه بعدين في 
-            return this.password.equals(input);
-        }
+    public boolean checkPassword(String input) {
+        return this.password.equals(input);
+    }
     
     
-    // these 3 setters are considered edit method
+    // Setters
     public final void setUsername(String username) {
         if (username == null || username.isBlank())
             throw new IllegalArgumentException("Username cannot be empty");
@@ -101,9 +87,8 @@ public abstract class User implements Serializable {
         DataStore.getInstance().saveUsers();
     }
     
-    
 
-    public boolean wasRegisteredBetween(LocalDateTime start, LocalDateTime end) {  //will be used in reports later
+    public boolean wasRegisteredBetween(LocalDateTime start, LocalDateTime end) {
         return !registeredDate.isBefore(start) && !registeredDate.isAfter(end);
     }
 
@@ -112,6 +97,7 @@ public abstract class User implements Serializable {
         if (dataStore == null) throw new IllegalStateException("DataStore not set");
         dataStore.getUsers().put(this.id, this);
         dataStore.saveUsers();
+        System.out.println("User saved: " + this.username + " (ID: " + this.id + ", Role: " + this.role + ")");
     }
 
     public void removeUser() {
@@ -121,27 +107,41 @@ public abstract class User implements Serializable {
     }
     
     
-    //   //////////////////Authration\\\\\\\\\\\\\\\\\\\\\\
+    //   //////////////////Authentication\\\\\\\\\\\\\\\\\\\\\\
     public static User login(String username, String password) {
-    for (User user : DataStore.getInstance().getUsers().values()) {
-        if (user.getUsername().equals(username) && user.checkPassword(password)) 
-            return user; // successful login
+        System.out.println("Login attempt - Username: " + username);
         
+        for (User user : DataStore.getInstance().getUsers().values()) {
+            System.out.println("Checking user: " + user.getUsername() + " (Role: " + user.getRole() + ")");
+            
+            if (user.getUsername().equals(username)) {
+                System.out.println("Username match found!");
+                System.out.println("Stored password: [" + user.password + "]");
+                System.out.println("Input password: [" + password + "]");
+                System.out.println("Passwords match: " + user.checkPassword(password));
+                
+                if (user.checkPassword(password)) {
+                    System.out.println("Login successful for: " + username);
+                    return user; // successful login
+                }
+            }
+        }
+        
+        System.out.println("Login failed for: " + username);
+        throw new IllegalArgumentException("Invalid username or password");
     }
-    throw new IllegalArgumentException("Invalid username or password");
-}
 
-public static boolean isAdmin(User user) {
-    return user != null && user.getRole().equals("ADMIN");
-}
+    public static boolean isAdmin(User user) {
+        return user != null && user.getRole().equals("ADMIN");
+    }
 
-public static boolean isSeller(User user) {
-    return user != null && user.getRole().equals("SELLER");
-}
+    public static boolean isSeller(User user) {
+        return user != null && user.getRole().equals("SELLER");
+    }
 
-public static boolean isCustomer(User user) {
-    return user != null && user.getRole().equals("CUSTOMER");
-}
+    public static boolean isCustomer(User user) {
+        return user != null && user.getRole().equals("CUSTOMER");
+    }
 
     
     @Override

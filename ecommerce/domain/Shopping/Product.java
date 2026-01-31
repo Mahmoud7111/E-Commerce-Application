@@ -75,24 +75,24 @@ public class Product implements Serializable {
     public void setName(String name) {
         if (name == null || name.isBlank()) throw new IllegalArgumentException("Product name required");
         this.name = name.trim();
-        DataStore.getInstance().saveUsers();
+        DataStore.getInstance().saveProducts(); // FIXED: was saveUsers()
     }
 
     public void setDescription(String description) {
         this.description = description != null ? description.trim() : "";
-        DataStore.getInstance().saveUsers();
+        DataStore.getInstance().saveProducts(); // FIXED: was saveUsers()
     }
 
     public void setPrice(double price) {
         if (price < 0) throw new IllegalArgumentException("Price cannot be negative");
         this.price = price;
-        DataStore.getInstance().saveUsers();
+        DataStore.getInstance().saveProducts(); // FIXED: was saveUsers()
     }
 
     public void setStock(int stock) {
         if (stock < 0) throw new IllegalArgumentException("Stock cannot be negative");
         this.stock = stock;
-        DataStore.getInstance().saveUsers();
+        DataStore.getInstance().saveProducts(); // FIXED: was saveUsers()
     }
     
      public final void setSellerId(String sellerId) {
@@ -100,17 +100,20 @@ public class Product implements Serializable {
         this.sellerId = sellerId.trim();
         DataStore.getInstance().saveProducts();
     }
-
-    // Domain logic
+     
+     
+// Domain logic
     public void reduceStock(int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
         if (quantity > stock) throw new IllegalArgumentException("Not enough stock");
         this.stock -= quantity;
+        DataStore.getInstance().saveProducts();
     }
 
     public void increaseStock(int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
         this.stock += quantity;
+        DataStore.getInstance().saveProducts();
     }
 
     
@@ -136,7 +139,6 @@ public class Product implements Serializable {
                p.description.toLowerCase().contains(lower) ||
                p.sellerId.toLowerCase().contains(lower);
     }
-
     
     
     //  /////////////Product Reports\\\\\\\\\\\\\\\\\\

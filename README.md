@@ -9,9 +9,9 @@ A comprehensive desktop e-commerce application built with **Java** and **JavaFX*
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
+- [Overview](#Overview)
+- [Features](#Features)
+- [Architecture](#Architecture)
 - [User Roles](#user-roles)
 - [Screenshots](#screenshots)
 - [Demo Video](#demo-video)
@@ -448,4 +448,5 @@ If you found this project helpful, please give it a ⭐️!
 - Shopping cart system
 - Revenue reporting
 - File-based persistence
+
 

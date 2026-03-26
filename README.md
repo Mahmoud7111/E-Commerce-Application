@@ -457,7 +457,9 @@ This project is currently **unlicensed**. Please contact the repository owner fo
 ## 👨‍💻 Author
 
 **Mahmoud7111**
+**omar-abass**
 - GitHub: [@Mahmoud7111](https://github.com/Mahmoud7111)
+- GitHub:omar-abass
 
 ---
 
@@ -476,6 +478,7 @@ If you found this project helpful, please give it a ⭐️!
 ---
 
 ## 📝 Changelog
+
 
 ### Version 1.0.0 (2026-01-31)
 - Initial release
